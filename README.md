@@ -1,5 +1,7 @@
 # build69-gtasa2.0
 SA-MP ANDROID build 69 to GTASA 2.0 with AML
+![msg6385958517-43711](https://github.com/tendensy/build69-gtasa2.0-remake/assets/130832390/8d4f8c81-06d6-42a1-9847-c1758c7889df)
+
 
 # ChangeLog
 
