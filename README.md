@@ -47,10 +47,10 @@ SA-MP ANDROID build 69 to GTASA 2.0 with AML
 
 # Connection (EN/RU)
 - **Сonnect / Подключение**
-- **[RU]**
+**[RU]**
 - менять айпи в main.h
 - ник в main.cpp
-# 
+#
 **[EN]**
 - change IP in main.h file
 - change your nickname in main.cpp
