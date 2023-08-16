@@ -1,13 +1,13 @@
 # build69-gtasa2.0
 SA-MP ANDROID build 69 to GTASA 2.0 with AML
 
-# tapy.me/weikton
+# ChangeLog
 
-- 21.07.2023
+# 21.07.2023
 - Новый gui.cpp (Кнопки ALT и Render Version)
 - Новый текст при запуске в netgame.cpp
 
-- 21.07.23
+# 21.07.23
 - Новый дизайн для кнопок
 - Debug в левом нижнем углу (FPS, POS, MEM и т.д)
 - Отдельный файл для хуков (перенос с 1.08)
@@ -18,7 +18,7 @@ SA-MP ANDROID build 69 to GTASA 2.0 with AML
                                                                              телепорт через RPC в a_samp)
 - CTimerResume_hook (Отслеживание выхода из паузы)
 
-- 22.07.23
+# 22.07.23
 - Добавлены CrashFixPatches связанные с CPools::ms_pEntryInfoNodePool
 - Добавлены SCAndPatches (отключение заставки Social Club
                                                            aka. нажать "OFFLINE" чтобы продолжить)
@@ -33,16 +33,26 @@ SA-MP ANDROID build 69 to GTASA 2.0 with AML
 - Patch for IMG Count (максимальное количество img архивов (max count of img archives))
 - Debug в оффлайн режиме игры (FPS, POS, MEM и т.д)
 
-- 23.07.23
+# 23.07.23
 - Фикс рандомного краша при работе с текстурами
 - Остановка загрузки tracks2.dat & tracks4.dat (FIX ME)
 - Фикс рандомного краша из-за RW
 
-- 28.07.23
+# 28.07.23
 - Hook на LoadingScreenPC
 
-- 05.08.23
+# 05.08.23
 - Перенесен хук на перенос путя игры (0/WeiktonGames) (OFF)
 - Перенос шрифта в логичный путь (arial_bold)
-- Разработка окончена, порт AML на 1.08
+
+# Connection (EN/RU)
+- **Сonnect / Подключение**
+- менять айпи в main.h
+- ник в main.cpp
+- change IP in main.h file
+- change your nickname in main.cpp
+
+- **StartUp / Запуск**
+- Перенести все файлы с названием  (они где то в дата)"tracks" в SAMP/
+- Добавляем шрифт arial_bold.ttf в папку SAMP/fonts
 
