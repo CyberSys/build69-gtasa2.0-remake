@@ -3,7 +3,7 @@ SA-MP ANDROID build 69 to GTASA 2.0 with AML
 
 # ChangeLog
 
-# 21.07.2023
+**21.07.2023**
 - Новый gui.cpp (Кнопки ALT и Render Version)
 - Новый текст при запуске в netgame.cpp
 
