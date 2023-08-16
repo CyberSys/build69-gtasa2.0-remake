@@ -1,11 +1,6 @@
-/* inih -- simple .INI file parser
-
-inih is released under the New BSD license (see LICENSE.txt). Go to the project
-home page for more info:
-
-https://github.com/benhoyt/inih
-
-*/
+//
+// Powered by tapy.me/weikton
+//
 
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS

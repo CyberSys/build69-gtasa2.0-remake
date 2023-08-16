@@ -1,3 +1,6 @@
+//
+// Powered by tapy.me/weikton
+//
 // Read an INI file into easy-to-access name/value pairs.
 
 // inih and INIReader are released under the New BSD license (see LICENSE.txt).

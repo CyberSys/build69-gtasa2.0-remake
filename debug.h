@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+ 
 #pragma once
 
 class CDebug
@@ -11,6 +15,7 @@ public:
 
 	void AddMessage(char* msg);
 	void SpawnLocalPlayer();
+                  void RenderWare();
 
 private:
 	uint32_t m_dwLastTick;

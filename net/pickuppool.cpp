@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "main.h"
 #include "game/game.h"
 #include "chatwindow.h"

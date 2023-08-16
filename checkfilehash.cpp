@@ -1,3 +1,8 @@
+
+//
+// Powered by tapy.me/weikton
+//
+ 
 #include "main.h"
 #include "vendor/hash/md5.h"
 #include "CheckFileHash.h"

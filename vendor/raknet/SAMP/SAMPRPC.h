@@ -1,4 +1,7 @@
 // https://github.com/P3ti/RakSAMP/blob/master/raknet/SAMP/SAMPRPC.h
+//
+// Powered by tapy.me/weikton
+//
 
 /*
 	Updated to 0.3.7 by P3ti

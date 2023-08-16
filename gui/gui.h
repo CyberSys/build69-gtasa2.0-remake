@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #pragma once
 
 #include "vendor/imgui/imgui.h"
@@ -48,4 +52,5 @@ private:
 	ImVec2		m_vecMousePos;
 
 	bool		m_bNeedClearMousePos;
+	bool 		m_bKeysStatus;
 };

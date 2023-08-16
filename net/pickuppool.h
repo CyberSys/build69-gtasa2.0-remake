@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #pragma once
 
 #define MAX_PICKUPS 4096

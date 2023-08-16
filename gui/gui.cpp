@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "main.h"
 #include "gui.h"
 #include "game/game.h"
@@ -21,16 +25,11 @@ extern CKeyBoard *pKeyBoard;
 extern CNetGame *pNetGame;
 extern CGame *pGame;
 
-/* imgui_impl_renderware.h */
 void ImGui_ImplRenderWare_RenderDrawData(ImDrawData* draw_data);
 bool ImGui_ImplRenderWare_Init();
 void ImGui_ImplRenderWare_NewFrame();
 void ImGui_ImplRenderWare_ShutDown();
 
-/*
-	Все координаты GUI-элементов задаются
-	относительно разрешения 1920x1080
-*/
 #define MULT_X	0.00052083333f	// 1/1920
 #define MULT_Y	0.00092592592f 	// 1/1080
 
@@ -66,7 +65,7 @@ CGUI::CGUI()
 
 	// load fonts
 	char path[0xFF] = { 0 };
-	sprintf(path, "%sfonts/arial_bold.ttf", (const char*)(g_GTASAAdr+0x6D687C));
+	sprintf(path, "%sSAMP/fonts/arial_bold.ttf", (const char*)(g_GTASAAdr+0x6D687C));
 
 	// cp1251 ranges
 	static const ImWchar ranges[] = 
@@ -83,8 +82,22 @@ CGUI::CGUI()
 	
 	FLog("GUI | Loading font: arial_bold.ttf");
 	m_pFont = io.Fonts->AddFontFromFileTTF(path, m_fFontSize, nullptr, ranges);
-	FLog("GUI | ImFont pointer = 0x%X", m_pFont);
+	//FLog("GUI | ImFont pointer = 0x%X", m_pFont);
 }
+
+/*
+                                    ImGui::Begin("###logo", nullptr,
+					 ImGuiWindowFlags_NoTitleBar |
+					 ImGuiWindowFlags_NoMove |
+					 ImGuiWindowFlags_NoResize |
+					 ImGuiWindowFlags_NoScrollbar |
+					 ImGuiWindowFlags_NoSavedSettings);
+
+		ImGui::Image((ImTextureID)texture, ImVec2(128,128));
+
+		ImGui::SetWindowPos(ImVec2(1400, 540));
+		ImGui::End();
+*/
 
 CGUI::~CGUI()
 {
@@ -94,63 +107,8 @@ CGUI::~CGUI()
 
 void CGUI::PresetsApply()
 {
-	ImGuiStyle* style = &ImGui::GetStyle();
-	ImVec4* colors = style->Colors;
-
-	style->WindowPadding = ImVec2(13, 4);
-	style->WindowRounding = 0.0f;
-	style->FramePadding = ImVec2(6, 3);
-	style->FrameRounding = 20.0f;
-	style->ItemSpacing = ImVec2(15, 4);
-	style->ItemInnerSpacing = ImVec2(14, 10);
-	style->IndentSpacing = 21.0f;
-	style->ScrollbarSize = ScaleY(45.0f);
-	style->ScrollbarRounding = 9.0f;
-	style->GrabMinSize = 18.0f;
-	style->GrabRounding = 8.0f;
-
-	style->WindowBorderSize = 0.0f;
-	style->ChildBorderSize  = 1.0f;
-	style->PopupBorderSize  = 1.0f;
-	style->FrameBorderSize  = 1.0f;
-	style->Alpha            = 1.0f;
-
-	colors[ImGuiCol_Text] 					= ImVec4(RGBA_TO_FLOAT(160, 194, 222, 0xFF));
-	colors[ImGuiCol_TextDisabled] 			= ImVec4(RGBA_TO_FLOAT(128, 128, 128, 0xFF));
-	colors[ImGuiCol_WindowBg]				= ImVec4(RGBA_TO_FLOAT(0, 0, 0, 245));
-	colors[ImGuiCol_ChildBg] 				= ImVec4(RGBA_TO_FLOAT(0, 0, 0, 0xFF));
-	colors[ImGuiCol_PopupBg] 				= ImVec4(RGBA_TO_FLOAT(20, 20, 20, 240));
-	colors[ImGuiCol_Border] 				= ImVec4(RGBA_TO_FLOAT(255, 255, 255, 0xFF));
-	colors[ImGuiCol_BorderShadow] 			= ImVec4(RGBA_TO_FLOAT(255, 255, 255, 0xFF));
-	colors[ImGuiCol_FrameBg] 				= ImVec4(RGBA_TO_FLOAT(0, 0, 0, 0xFF));
-	colors[ImGuiCol_FrameBgHovered] 		= ImVec4(RGBA_TO_FLOAT(40, 40, 40, 120));
-	colors[ImGuiCol_FrameBgActive] 			= ImVec4(RGBA_TO_FLOAT(40, 40, 40, 140));
-	colors[ImGuiCol_TitleBg] 				= ImVec4(RGBA_TO_FLOAT(10, 10, 10, 0xFF));
-	colors[ImGuiCol_TitleBgCollapsed] 		= ImVec4(RGBA_TO_FLOAT(0, 0, 0, 130));
-	colors[ImGuiCol_TitleBgActive] 			= ImVec4(RGBA_TO_FLOAT(16, 16, 16, 0xFF));
-	colors[ImGuiCol_MenuBarBg] 				= ImVec4(RGBA_TO_FLOAT(36, 36, 36, 0xFF));
-	colors[ImGuiCol_ScrollbarBg] 			= ImVec4(RGBA_TO_FLOAT(36, 36, 36, 135));
-	colors[ImGuiCol_ScrollbarGrab] 			= ImVec4(RGBA_TO_FLOAT(177, 40, 0, 0xFF));
-	colors[ImGuiCol_ScrollbarGrabHovered] 	= ImVec4(RGBA_TO_FLOAT(239, 16, 16, 0xFF));
-	colors[ImGuiCol_ScrollbarGrabActive] 	= ImVec4(RGBA_TO_FLOAT(249, 0, 0, 0xFF));
-	colors[ImGuiCol_CheckMark] 				= ImVec4(RGBA_TO_FLOAT(21, 21, 21, 0xFF));
-	colors[ImGuiCol_SliderGrab] 			= ImVec4(RGBA_TO_FLOAT(149, 42, 42, 0xFF));
-	colors[ImGuiCol_SliderGrabActive] 		= ImVec4(RGBA_TO_FLOAT(201, 55, 21, 0xFF));
-	colors[ImGuiCol_Button] 				= ImVec4(RGBA_TO_FLOAT(0, 0, 0, 102));
-	colors[ImGuiCol_ButtonHovered] 			= ImVec4(RGBA_TO_FLOAT(19, 19, 19, 0xFF));
-	colors[ImGuiCol_ButtonActive] 			= ImVec4(RGBA_TO_FLOAT(60, 60, 60, 0xFF));
-	colors[ImGuiCol_Header] 				= ImVec4(RGBA_TO_FLOAT(166, 50, 0, 79));
-	colors[ImGuiCol_HeaderHovered] 			= ImVec4(RGBA_TO_FLOAT(54, 53, 52, 79));
-	colors[ImGuiCol_HeaderActive] 			= ImVec4(RGBA_TO_FLOAT(166, 50, 0, 79));
-	colors[ImGuiCol_ResizeGrip] 			= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_ResizeGripHovered] 		= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_ResizeGripActive] 		= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_PlotLines] 				= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_PlotLinesHovered] 		= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_PlotHistogram] 			= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_PlotHistogramHovered] 	= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
-	colors[ImGuiCol_TextSelectedBg] 		= ImVec4(RGBA_TO_FLOAT(255, 220, 255, 0xFF));
-	colors[ImGuiCol_ModalWindowDarkening] 	= ImVec4(RGBA_TO_FLOAT(32, 32, 32, 0xFF));
+                  FLog("Calling CGUI::PresetsApply..");
+                  FLog("Calling was terminated, by reason: status off");
 }
 
 void CGUI::Render()
@@ -172,25 +130,93 @@ void CGUI::Render()
 	ImGui::NewFrame();
 	PresetsApply();
 
-	if(pPlayerTags) {
-		pPlayerTags->Render();
-	}
-	
-	if(pChatWindow) {
-		pChatWindow->Render();
+	if(pPlayerTags) pPlayerTags->Render();
+	if(pChatWindow) pChatWindow->Render();
+	if(pSpawnScreen) pSpawnScreen->Render();
+	if(pDialogWindow) pDialogWindow->Render();
+	if(pKeyBoard) pKeyBoard->Render();
+                  if(pNetGame && !pDialogWindow->m_bIsActive) pDebug->RenderWare();
+
+	if(pNetGame && !pDialogWindow->m_bIsActive) {
+		ImVec2 vecButSize = ImVec2(ImGui::GetFontSize() * 3.8, ImGui::GetFontSize() * 2.5);
+
+		ImGui::SetNextWindowPos(ImVec2(2.0f, (io.DisplaySize.y / 3) - (vecButSize.x / 2) + io.DisplaySize.y / 30));
+		//ImGui::SetNextWindowBgAlpha(0.3f);
+		ImGui::Begin("###keys", nullptr,
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoScrollbar |
+			ImGuiWindowFlags_NoSavedSettings |
+			//ImGuiWindowFlags_NoBackground |
+			ImGuiWindowFlags_AlwaysAutoResize);
+
+		// проеряем нажатие toggle-кнопки, меняем её текст
+		if (ImGui::Button(m_bKeysStatus ? "<<" : ">>", vecButSize))
+		{
+			// меняем состояние кнопки
+			m_bKeysStatus = !m_bKeysStatus;
+		}
+		ImGui::SameLine();
+
+		// если нажали на Alt
+		if (ImGui::Button("Alt", vecButSize))
+		{
+			//pNetGame->GetPlayerPool()->GetLocalPlayer()->GetPlayerPed()->
+			LocalPlayerKeys.bKeys[ePadKeys::KEY_WALK] = true;
+		}
+                                    ImGui::SameLine();
+
+		if(pNetGame)
+		{
+			CVehiclePool *pVehiclePool = pNetGame->GetVehiclePool();
+			if(pVehiclePool)
+			{
+				VEHICLEID ClosetVehicleID = pVehiclePool->FindNearestToLocalPlayerPed();
+				if(ClosetVehicleID < MAX_VEHICLES && pVehiclePool->GetSlotState(ClosetVehicleID))
+				{
+					CVehicle* pVehicle = pVehiclePool->GetAt(ClosetVehicleID);
+					if(pVehicle)
+					{
+						if(pVehicle->GetDistanceFromLocalPlayerPed() < 4.0f)
+						{
+							if (ImGui::Button("G", vecButSize))
+							{
+								CPlayerPool *pPlayerPool;
+								CLocalPlayer *pLocalPlayer;
+
+								if(pNetGame)
+								{
+									pPlayerPool = pNetGame->GetPlayerPool();
+									if(pPlayerPool)
+									{
+										pLocalPlayer = pPlayerPool->GetLocalPlayer();
+										if(pLocalPlayer)
+										{
+											pLocalPlayer->HandlePassengerEntry();
+										}
+									}
+								}
+							}
+							ImGui::SameLine();
+						}
+					}
+				}
+			}
+		}
+
+		// если кнопку переключили в раскрытое состояние, рендерим остальные кнопки
+		if(m_bKeysStatus) {
+		ImGui::SameLine();
+		if (ImGui::Button("H", vecButSize)) LocalPlayerKeys.bKeys[ePadKeys::KEY_CTRL_BACK] = true;
+		ImGui::SameLine();
+		if (ImGui::Button("Y", vecButSize)) LocalPlayerKeys.bKeys[ePadKeys::KEY_YES] = true;
+		ImGui::SameLine();
+		if (ImGui::Button("N", vecButSize)) LocalPlayerKeys.bKeys[ePadKeys::KEY_NO] = true;
+		}
+
+		ImGui::End();
 	}
 
-	if(pSpawnScreen) {
-		pSpawnScreen->Render();
-	}
-
-	if(pDialogWindow) {
-		pDialogWindow->Render();
-	}
-
-	if(pKeyBoard) {
-		pKeyBoard->Render();
-	}
 
 	ImGui::EndFrame();
 	ImGui::Render();
@@ -255,7 +281,8 @@ bool CGUI::OnTouchEvent(int type, bool multi, int x, int y)
 
 void CGUI::RenderVersion()
 {
-	// nothing
+	//ImVec2 _ImVec2 = ImVec2(ScaleX(10), ScaleY(5));
+	//RenderText(_ImVec2, ImColor(255, 255, 255, 255), false, "", nullptr);
 }
 
 void CGUI::RenderRakNetStatistics()

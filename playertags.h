@@ -1,5 +1,9 @@
 #pragma once
 
+//
+// Powered by tapy.me/weikton
+//
+
 #include "game/RW/RenderWare.h"
 
 class CPlayerTags

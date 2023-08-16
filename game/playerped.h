@@ -79,6 +79,8 @@ public:
 	uint8_t		m_bytePlayerNumber;
 	uint32_t	m_dwArrow;
 
+	MATRIX4X4 m_HeadBoneMatrix;
+
 	ATTACHED_OBJECT 	m_AttachedObjectInfo[10];
 	bool 				m_bObjectSlotUsed[10];
 	CObject* 			m_pAttachedObjects[10];

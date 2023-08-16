@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "../main.h"
 #include "../game/game.h"
 #include "netgame.h"
@@ -90,7 +94,7 @@ CNetGame::CNetGame(const char* szHostOrIp, int iPort, const char* szPlayerName, 
 	pGame->EnableZoneNames(false);
 
 	if(pChatWindow) {
-		pChatWindow->AddDebugMessage("{FFFFFF}SA-MP {B9C9BF}" SAMP_VERSION " {FFFFFF}Started");
+		pChatWindow->AddDebugMessage("{FFFF00}|{FFFFFF} Developed by {FFFF00}tapy.me/weikton {FFFFFF}");
 	}
 }
 
@@ -192,7 +196,7 @@ void CNetGame::ProcessConnecting()
 
 	if(pChatWindow) 
 	{
-		pChatWindow->AddDebugMessage("Connecting to %s:%d...", m_szHostOrIp, m_iPort);
+		pChatWindow->AddDebugMessage("Соединение к %s:%d...", m_szHostOrIp, m_iPort);
 		bNeedFastScroll = true;
 	}
 
@@ -462,6 +466,27 @@ void CNetGame::SendChatCommand(const char* szCommand)
 {
 	if (GetGameState() != GAMESTATE_CONNECTED) return;
 
+	if (strcmp(szCommand, "/q") == 0 || strcmp(szCommand, "/quit") == 0)
+	{
+		std::terminate();
+		return;
+	}
+	else if (strcmp(szCommand, "/reconnect") == 0)
+	{
+		//if (GetGameState() == GAMESTATE_CONNECTED)
+		//{
+			ShutDownForGameRestart();
+		//}
+		//else
+		//{
+		//	SetGameState(GAMESTATE_WAIT_CONNECT);
+		//}
+		return;
+	} else if (strcmp(szCommand, "/test") == 0)
+	{
+                                    pGame->DisplayGameText("by weikton", 15, 0);
+		return;
+	}
 	RakNet::BitStream bsParams;
 	int iStrlen = strlen(szCommand);
 
@@ -567,7 +592,7 @@ void CNetGame::Packet_InvalidPassword(Packet* pkt)
 void CNetGame::Packet_DisconnectionNotification(Packet* pkt)
 {
 	if(pChatWindow)
-		pChatWindow->AddDebugMessage("Server closed the connection.");
+		pChatWindow->AddDebugMessage("Сервер закрыл соединение.");
 	m_pRakClient->Disconnect(2000);
 }
 
@@ -576,7 +601,7 @@ void CNetGame::Packet_ConnectionLost(Packet* pkt)
 	if(m_pRakClient) m_pRakClient->Disconnect(0);
 
 	if(pChatWindow)
-		pChatWindow->AddDebugMessage("Lost connection to the server. Reconnecting..");
+		pChatWindow->AddDebugMessage("Потеряно соединение. Повторный вход в игру..");
 
 	ShutDownForGameRestart();
 
@@ -593,7 +618,7 @@ void CNetGame::Packet_ConnectionSucceeded(Packet* pkt)
 {
 	if(pChatWindow) 
 	{
-		pChatWindow->AddDebugMessage("Connected. Joining the game...");
+		pChatWindow->AddDebugMessage("Вход в игру...");
 		bNeedFastScroll = true;
 	}
 	

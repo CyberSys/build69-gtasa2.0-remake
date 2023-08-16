@@ -1,6 +1,11 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "../main.h"
 #include "../util/armhook.h"
 #include "common.h"
+#include "../str_obfuscator_no_template.hpp"
 
 char* PLAYERS_REALLOC = nullptr;
 
@@ -26,9 +31,55 @@ void ApplyRadarPatches()
     ARMHook::writeMemory(g_GTASAAdr + 0x2AB556, (uintptr_t)"\x00\x21", 2); // Menu_MapRender
 }
 
+/*void ApplyCrashFixPatches()
+{
+                  FLog("Apply CrashFix Patches [0]");                  
+
+                  // Pools Patch #1+
+	// reallocate CPools::ms_pEntryInfoNodePool
+                  FLog("Apply CrashFix Patches [1]");
+                  // .text:0040C99A                 MOVW            R0, #0x2710 ; unsigned int
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C99A, (uintptr_t)"\x4f\xf4\x20\x40", 4); // MOV.W	R0, #0xA000 | size = 0x14
+
+                  // Pools Patch #2
+                  FLog("Apply CrashFix Patches [2]");
+                  // .text:0040C9A4                 MOV.W           R0, #0x1F4 ; unsigned int
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C9A4, (uintptr_t)"\x4f\xf4\x00\x60", 4); // MOV.W R0, #0x800
+
+                  // .text:0040C9A8                 MOV.W           R5, #0x1F4
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C9A8, (uintptr_t)"\x4f\xf4\x00\x62", 4); // MOV.W R2, #0x800
+
+                  // .text:0040C9EC                 CMP.W           R0, #0x1F4
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C9EC, (uintptr_t)"\xb3\xf5\x00\x6f", 4); // CMP.W R3, #0x800
+                  
+                  FLog("Apply CrashFix Patches [2.1]");
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C9A4, (uintptr_t)"\x4f\xf4\x90\x50", 4); // MOV.W R0, #0x1200
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C9A8, (uintptr_t)"\x4f\xf4\x90\x52", 4); // MOV.W R2, #0x1200
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C9EC, (uintptr_t)"\xb3\xf5\x90\x5f", 4); // CMP.W R3, #0x1200
+
+                  // Pools Patch #3
+	// reallocate CPools::ms_pPtrNodeDoubleLinkPool
+                  FLog("Apply CrashFix Patches [3]");
+                  // .text:0040C92E                 MOV             R0, #0x11940 ; unsigned int
+	ARMHook::writeMemory(g_GTASAAdr + 0x0040C92E, (uintptr_t)"\x4F\xF4\x00\x30", 4); // MOV.W R0, #0x20000
+
+                  FLog("Apply CrashFix Patches [Success]");
+}*/
+
+void ApplyTracksPatches()
+{
+                  FLog("STOP trying loading tracks2.dat & tracks4.dat");                  
+
+	// tracks2.dat
+	ARMHook::makeNOP(g_GTASAAdr + 0x0057CB66, 2);
+
+	// tracks4.dat
+	ARMHook::makeNOP(g_GTASAAdr + 0x0057CB96, 2);
+}
+
 void ApplyGlobalPatches()
 {
-	FLog("ApplyGlobalPatches");
+    FLog("ApplyGlobalPatches");
 
     PLAYERS_REALLOC = (( char* (*)(int))(g_GTASAAdr + 0x198A70))(404 * 257 * sizeof(char));
     memset(PLAYERS_REALLOC, 0, 404 * 257);
@@ -37,6 +88,8 @@ void ApplyGlobalPatches()
 
     // IMG count
     // ARMHook::writeMemory(g_GTASAAdr + 0x3F3648, (uintptr_t)"\x06\x20", 2); 
+
+    //ApplyCrashFixPatches();
 
     // CBoat::ProcessControl
     ARMHook::makeNOP(g_GTASAAdr + 0x56C150, 4); 
@@ -81,14 +134,14 @@ void ApplyGlobalPatches()
     // _rwOpenGLRasterCreate
     ARMHook::writeMemory(g_GTASAAdr + 0x1AE95E, (uintptr_t)"\x01\x22", 2);
 	
-  	// CAudioEngine::StartLoadingTune
-  	ARMHook::makeNOP(g_GTASAAdr + 0x5E4916, 2);
+    // CAudioEngine::StartLoadingTune
+    ARMHook::makeNOP(g_GTASAAdr + 0x5E4916, 2);
 	 
     // Tasks
-  	ARMHook::makeRET(g_GTASAAdr + 0x3976AC);	// CAEGlobalWeaponAudioEntity::ServiceAmbientGunFire
-  	ARMHook::makeRET(g_GTASAAdr + 0x4211A0);	// CPlaceName::Process
-  	ARMHook::makeRET(g_GTASAAdr + 0x538C8C);	// CTaskSimplePlayerOnFoot::PlayIdleAnimations
-  	ARMHook::makeRET(g_GTASAAdr + 0x50AA58);	// CCarEnterExit::SetPedInCarDirect
+    ARMHook::makeRET(g_GTASAAdr + 0x3976AC);	// CAEGlobalWeaponAudioEntity::ServiceAmbientGunFire
+    ARMHook::makeRET(g_GTASAAdr + 0x4211A0);	// CPlaceName::Process
+    ARMHook::makeRET(g_GTASAAdr + 0x538C8C);	// CTaskSimplePlayerOnFoot::PlayIdleAnimations
+    ARMHook::makeRET(g_GTASAAdr + 0x50AA58);	// CCarEnterExit::SetPedInCarDirect
   	   
     // generator
     ARMHook::makeRET(g_GTASAAdr + 0x56E350);  // CTheCarGenerators::Process
@@ -97,7 +150,7 @@ void ApplyGlobalPatches()
     // CPopulation::AddToPopulation
     // ARMHook::makeRET(g_GTASAAdr + 0x4CCA98);
 
-  	ARMHook::makeRET(g_GTASAAdr + 0x2E82CC);  // CCarCtrl::GenerateRandomCars
+    ARMHook::makeRET(g_GTASAAdr + 0x2E82CC);  // CCarCtrl::GenerateRandomCars
     ARMHook::makeRET(g_GTASAAdr + 0x579214);  // CPlane::DoPlaneGenerationAndRemoval
     ARMHook::makeRET(g_GTASAAdr + 0x46B548);  // CFileLoader::LoadPickup
     ARMHook::makeRET(g_GTASAAdr + 0x306EC0);  // CEntryExit::GenerateAmbientPeds
@@ -108,9 +161,9 @@ void ApplyGlobalPatches()
     ARMHook::makeRET(g_GTASAAdr + 0x436F5C); // CHud::SetHelpMessage
 
     // shadow patch
-  	ARMHook::makeNOP(g_GTASAAdr + 0x3FCD34, 2);	   // ReturnRealTimeShadow
-  	ARMHook::makeNOP(g_GTASAAdr + 0x3FCD74, 2);	  // ReturnRealTimeShadow
-  	ARMHook::makeRET(g_GTASAAdr + 0x5B83FC);	 // CRealTimeShadowManager::Update
+    ARMHook::makeNOP(g_GTASAAdr + 0x3FCD34, 2);	   // ReturnRealTimeShadow
+    ARMHook::makeNOP(g_GTASAAdr + 0x3FCD74, 2);	  // ReturnRealTimeShadow
+    ARMHook::makeRET(g_GTASAAdr + 0x5B83FC);	 // CRealTimeShadowManager::Update
 
     // interior patch
     ARMHook::makeRET(g_GTASAAdr + 0x445E98); // Interior_c::AddPickups
@@ -121,10 +174,10 @@ void ApplyGlobalPatches()
     ARMHook::makeNOP(g_GTASAAdr + 0x40BED6, 2);  // CPlayerInfo::KillPlayer
 
     // CPed::RemoveWeaponWhenEnteringVehicle
-  	ARMHook::makeNOP(g_GTASAAdr + 0x4A5328, 6);		
+    ARMHook::makeNOP(g_GTASAAdr + 0x4A5328, 6);		
   
-  	// fps debug
-  	*(uint8_t *)(g_GTASAAdr + 0x98F1AD) = 1;
+    // fps debug
+    // *(uint8_t *)(g_GTASAAdr + 0x98F1AD) = 1;
 
     // SaveGameForPause
     // ARMHook::makeRET(g_GTASAAdr + 0x5E4BE8);
@@ -198,32 +251,52 @@ void ApplyGlobalPatches()
     // ARMHook::writeMemory(g_GTASAAdr + 0x40CA7C, (uintptr_t)"\x5F\xF4\xFA\x65", 2); // MOVS R5, #0x7D0
     // ARMHook::writeMemory(g_GTASAAdr + 0x40CABE, (uintptr_t)"\xB0\xF5\xFA\x6F", 2); // CMP  R0, 0x7D0
 
+    //ApplyTracksPatches();
     ApplyRadarPatches();
 }
 
 void ApplySCAndPatches()
 {
-	FLog("ApplySCAndPatches");
+	FLog("ApplySCAndPatches [0]");
 
-	// SocialClub Patch #1
-    ARMHook::unprotect(g_SCANDAdr+0x31C149);
-    *(bool*)(g_SCANDAdr+0x31C149) = true;
+                  // --------------------------------------------------------------------------------------------------------------------------------------------
+                  // 2.0
+	// uintptr_t g_libSCAnd = ARMHook::getLibraryAddress("libSCAnd.so");
+                  // 0026F7D4 aComRockstargam_22 DCB "com/rockstargames/hal/andThread",0
+	// ARMHook::writeMemory(g_SCANDAdr + 0x26F7D4, (uintptr_t)"com/rockstargames/hal/andViewManager", 37);
+
+                  // 001ACF5C aRunonmainthrea DCB "runOnMainThread",0 ; DATA XREF: hal::Thread::runOnMainThread(hal::Thread::Runnable *,int)+74↑o
+	// ARMHook::writeMemory(g_SCANDAdr + 0x1ACF5C, (uintptr_t)"staticExitSocialClub", 21);
+
+                  // 001A63C0 aIiV            DCB "(II)V",0           ; DATA XREF: hal::ColourPicker::SetFittedItem(int,int)+12↑o
+	// ARMHook::writeMemory(g_SCANDAdr + 0x1A63C0, (uintptr_t)"()V", 4);
+                  // --------------------------------------------------------------------------------------------------------------------------------------------
+
+                  // ------------------------------------------------------------------------------------------------------
+                  // 1.08
+	//uintptr_t g_libSCAnd = FindLibrary("libSCAnd.so");
+	//CPatch::WriteMemory(g_libSCAnd + 0x1E16DC, cryptor::create("com/rockstargames/hal/andViewManager", 37).decrypt(), 37);
+	//CPatch::WriteMemory(g_libSCAnd + 0x1E1738, cryptor::create("staticExitSocialClub", 21).decrypt(), 21);
+	//CPatch::WriteMemory(g_libSCAnd + 0x1E080C, cryptor::create("()V", 4).decrypt(), 4);
+                  // -------------------------------------------------------------------------------------------------------
+
+                  FLog("ApplySCAndPatches [libSCAnd.so wasted]");
 }
 
 void ApplySAMPPatchesInGame()
 {
 	FLog("ApplySAMPPatchesInGame");
 
-    // CTheZones::ZonesVisited[100]
+                  // CTheZones::ZonesVisited[100]
 	memset((void*)(g_GTASAAdr + 0x98D252), 1, 100);
 
 	// CTheZones::ZonesRevealed
 	*(uint32_t*)(g_GTASAAdr + 0x98D2B8) = 100;
 
-    ARMHook::unprotect(g_GTASAAdr + 0x5E4978);
-    ARMHook::unprotect(g_GTASAAdr + 0x5E4990);
-    *(uint8_t *)(g_GTASAAdr + 0x5E4978) = g_fps;
-    *(uint8_t *)(g_GTASAAdr + 0x5E4990) = g_fps;
+                  ARMHook::unprotect(g_GTASAAdr + 0x5E4978);
+                  ARMHook::unprotect(g_GTASAAdr + 0x5E4990);
+                 *(uint8_t *)(g_GTASAAdr + 0x5E4978) = g_fps;
+                 *(uint8_t *)(g_GTASAAdr + 0x5E4990) = g_fps;
 
     // Draw distance hack (LAGS?)
     /*ARMHook::unprotect(g_GTASAAdr+0x41F300);

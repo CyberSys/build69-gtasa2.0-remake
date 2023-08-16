@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #pragma once
 
 #define MAX_GANG_ZONES	1024

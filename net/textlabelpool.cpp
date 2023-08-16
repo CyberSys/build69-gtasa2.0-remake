@@ -1,3 +1,6 @@
+//
+// Powered by tapy.me/weikton
+//
 #include "main.h"
 #include "gui/gui.h"
 #include "game/game.h"

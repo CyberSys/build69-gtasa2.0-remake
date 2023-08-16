@@ -1,4 +1,7 @@
 #pragma once
+//
+// Powered by tapy.me/weikton
+//
 
 class CSpawnScreen
 {

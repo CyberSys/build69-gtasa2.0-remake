@@ -1,5 +1,9 @@
 #pragma once
 
+//
+// Powered by tapy.me/weikton
+//
+
 #include <jni.h>
 #include <android/log.h>
 #include <ucontext.h>
@@ -22,7 +26,7 @@
 
 #define SAMP_VERSION	"0.3.7"
 #define PORT_VERSION	"1.0.0"
-#define SRV_IP "192.168.1.103"
+#define SRV_IP "54.38.117.77"
 #define MAX_IP_LENGTH 	strlen(SRV_IP)
 // #define DEBUG_MODE
 

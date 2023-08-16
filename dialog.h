@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+ 
 #pragma once
 
 #define DIALOG_STYLE_MSGBOX		0

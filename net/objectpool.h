@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #pragma once
 
 #define INVALID_OBJECT_ID	0xFFF9

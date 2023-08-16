@@ -1,6 +1,9 @@
 #include "../../main.h"
 #include "RenderWare.h"
 
+//
+// Powered by tapy.me/weikton
+//
 RsGlobalType* RsGlobal;
 
 /* rwcore.h */

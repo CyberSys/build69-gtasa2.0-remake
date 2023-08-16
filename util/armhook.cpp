@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "../main.h"
 #include "armhook.h"
 #include <sys/mman.h>

@@ -1,3 +1,6 @@
+//
+// Powered by tapy.me/weikton
+//
 #ifndef STR_OBFUSCATOR_HPP_
 #define STR_OBFUSCATOR_HPP_
 

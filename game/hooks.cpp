@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "../main.h"
 #include "../util/armhook.h"
 #include "RW/RenderWare.h"
@@ -5,6 +9,8 @@
 #include "net/netgame.h"
 #include "gui/gui.h"
 #include "chatwindow.h"
+
+#include "firstperson.h"
 
 extern CNetGame *pNetGame;
 extern CGUI *pGUI;
@@ -162,7 +168,7 @@ void CStream__InitImageList_Hook()
 void (*CGame__InitialiseRenderWare)();
 void CGame__InitialiseRenderWare_Hook()
 {
-	// FLog("CGame__InitialiseRenderWare_Hook");
+                  FLog("CGame__InitialiseRenderWare_Hook");
 
 	CGame__InitialiseRenderWare();
 
@@ -508,6 +514,135 @@ int CPlaceable_InitMatrixArray_hook(uintptr_t thiz)
 	return ((int (__fastcall *)(int, signed int))(g_GTASAAdr + 0x407F85))(g_GTASAAdr + 0x95A988, 10000);
 }
 
+// 0042A774
+// Телепорт по метке на карте ( Teleport from map in menu )
+int (*CRadar__SetCoordBlip)(int r0, float X, float Y, float Z, int r4, int r5, char* name);
+int CRadar__SetCoordBlip_hook(int r0, float X, float Y, float Z, int r4, int r5, char* name)
+{
+	if(pNetGame && !strncmp(name, "CODEWAY", 7))
+	{
+		float findZ = (( float (*)(float, float))(g_GTASAAdr + 0x42A774 + 1))(X, Y); // 2.01
+		findZ += 1.5f;
+
+		FLog("OnPlayerClickMap: %f, %f, %f", X, Y, Z);
+		RakNet::BitStream bsSend;
+
+		bsSend.Write(X);
+		bsSend.Write(Y);
+		bsSend.Write(findZ);
+
+		pNetGame->GetRakClient()->RPC(&RPC_MapMarker, &bsSend, HIGH_PRIORITY, RELIABLE, 0, false, UNASSIGNED_NETWORK_ID, nullptr);
+	}
+	return CRadar__SetCoordBlip(r0, X, Y, Z, r4, r5, name);
+}
+
+// экран загрузки
+void RenderSplashScreen();
+void (*CLoadingScreen_DisplayPCScreen)();
+void CLoadingScreen_DisplayPCScreen_hook()
+{
+                  // .bss:009FC93C dword_9FC93C    % 4                     ; DATA XREF: CCam::Process_FollowPedWithMouse(CVector const&,float,float,float)+622↑r
+                  // .bss:009FC93C                                         ; CCam::Process_FollowPedWithMouse(CVector const&,float,float,float)+67E↑r ...
+	RwCamera* camera = *(RwCamera**)(g_GTASAAdr + 0x9FC93C);
+
+	if (RwCameraBeginUpdate(camera))
+	{
+		DefinedState2d();
+
+                                    // CSprite2d::InitPerFrame()
+                                    // .text:005C89A8 ; _DWORD CSprite2d::InitPerFrame(CSprite2d *__hidden this)
+                                    // .text:005C89A8                 EXPORT _ZN9CSprite2d12InitPerFrameEv
+                                    // .text:005C89A8 _ZN9CSprite2d12InitPerFrameEv           ; CODE XREF: CSprite2d::InitPerFrame(void)+8↑j
+                                    // .text:005C89A8                                         ; DATA XREF: .got:_ZN9CSprite2d12InitPerFrameEv_ptr↓o ...
+		((void (*)())(g_GTASAAdr + 0x5C89A8 + 1))();
+		RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
+
+                                    // emu_GammaSet()
+                                    // .text:001C07D0 ; _DWORD __fastcall emu_GammaSet(unsigned __int8)
+                                    // .text:001C07D0                 EXPORT _Z12emu_GammaSeth
+                                    // .text:001C07D0 _Z12emu_GammaSeth                       ; CODE XREF: emu_GammaSet(uchar)+8↑j
+                                    // .text:001C07D0                                         ; DATA XREF: .got:_Z12emu_GammaSeth_ptr↓o ...
+                                    // .text:001C07D0                 LDR             R1, =(curShaderStateFlags_ptr - 0x1C07D8)
+		((void (*)(bool))(g_GTASAAdr + 0x1C07D0 + 1))(false);
+		RenderSplashScreen();
+		RwCameraEndUpdate(camera);
+		RwCameraShowRaster(camera, 0, 0);
+	}
+
+	return;
+}
+
+// общая камера игры
+void (*CCam__Process)(uintptr_t);
+void CCam__Process_hook(uintptr_t thiz)
+{
+	//if (*(uint16_t*)(thiz + 14) == 4 || *(uint16_t*)(thiz + 14) == 53)
+	//{
+		if (pNetGame)
+		{
+			if (pNetGame->GetPlayerPool())
+			{
+				if (pNetGame->GetPlayerPool()->GetLocalPlayer())
+				{
+					CPlayerPed* pPed = pNetGame->GetPlayerPool()->GetLocalPlayer()->GetPlayerPed();
+					if (pPed)
+					{
+						//*(uint32_t*)(g_libGTASA + 0x008B0808 + 120) = 0xFFFFFFFF;
+						//*(uint32_t*)(g_libGTASA + 0x008B0808 + 124) = 0xFFFFFFFF;
+						//*(uint8_t*)(g_libGTASA + 0x008B0808 + 40) = 0;
+						CFirstPersonCamera::ProcessCameraOnFoot(thiz, pPed);
+					}
+				}
+			}
+		}
+	//}
+}
+
+uintptr_t(*GetTexture_orig)(const char*);
+uintptr_t GetTexture_hook(const char* a1)
+{
+	uintptr_t tex = ((uintptr_t(*)(const char*))(g_GTASAAdr + 0x001E9CE4 + 1))(a1);
+	if (!tex)
+	{
+		FLog("Texture %s was not found", a1);
+		return 0;
+	}
+	else
+	{
+		++* (uintptr_t*)(tex + 84);
+		return tex;
+	}
+}
+
+char g_bufRenderQueueCommand[200];
+uintptr_t g_dwRenderQueueOffset;
+
+char* (*RenderQueue__ProcessCommand)(uintptr_t thiz, char* a2);
+char* RenderQueue__ProcessCommand_hook(uintptr_t thiz, char* a2)
+{
+	if (thiz && a2)
+	{
+		uintptr_t* dwRenderQueue = (uintptr_t*)thiz;
+
+		memset(g_bufRenderQueueCommand, 0, sizeof(g_bufRenderQueueCommand));
+
+		g_dwRenderQueueOffset = *(uintptr_t*)a2;
+		snprintf(g_bufRenderQueueCommand, 190, "offset: %d | name: %s", g_dwRenderQueueOffset, (const char*)(*(dwRenderQueue + 100 + g_dwRenderQueueOffset)));
+
+		return RenderQueue__ProcessCommand(thiz, a2);
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+uintptr_t(*CPlayerInfo__FindObjectToSteal)(uintptr_t, uintptr_t);
+uintptr_t CPlayerInfo__FindObjectToSteal_hook(uintptr_t a1, uintptr_t a2)
+{
+	return 0;
+}
+
 void InstallGlobalHooks()
 {
 	FLog("InstallGlobalHooks");
@@ -524,8 +659,30 @@ void InstallGlobalHooks()
 
 	ARMHook::InjectCode(g_GTASAAdr + 0x40AC28, (uintptr_t)TaskEnterVehicle_hook, 0);
 	SetupGameHook(g_GTASAAdr + 0x4F8904, (uintptr_t)CTaskComplexLeaveCar_Hook, (uintptr_t*)&CTaskComplexLeaveCar);
-
 	ARMHook::installPLTHook(g_GTASAAdr + 0x675554, (uintptr_t)CPlaceable_InitMatrixArray_hook, (uintptr_t*)&CPlaceable_InitMatrixArray);
+
+//                --------------------------------------------------------------------------------------
+//                tapy.me/weikton
+//                SetupGameHook -> SetUpHook -> ARMHook::installPLTHook
+
+                  SetupGameHook(g_GTASAAdr + 0x442720, (uintptr_t)CRadar__SetCoordBlip_hook, (uintptr_t*)&CRadar__SetCoordBlip); //00442720
+//	SetupGameHook(g_GTASAAdr + 0x43AF28, (uintptr_t)CLoadingScreen_DisplayPCScreen_hook, (uintptr_t*)&CLoadingScreen_DisplayPCScreen); //0043AF28
+//                SetupGameHook(g_GTASAAdr + 0x3BF2B0, (uintptr_t)&CCam__Process_hook, (uintptr_t*)&CCam__Process);
+
+//                Рандомный краш при работе с текстурами
+	SetupGameHook(g_GTASAAdr + 0x00297210, (uintptr_t)GetTexture_hook, (uintptr_t*)& GetTexture_orig); //00297210
+
+//                Рандомный краш (все потому что гта дура, супер дура гта дура)
+//                FLog("RenderQueue__ProcessCommand_hook");
+                  FLog("все потому что гта дура, супер дура гта дура");
+//	SetupGameHook(g_GTASAAdr + 0x001D1FFE, (uintptr_t)RenderQueue__ProcessCommand_hook, (uintptr_t*)& RenderQueue__ProcessCommand);
+
+//                Steal objects fix
+//                  FLog("CPlayerInfo__FindObjectToSteal_hook");
+//	SetupGameHook(g_GTASAAdr + 0x0040B028, (uintptr_t)CPlayerInfo__FindObjectToSteal_hook, (uintptr_t*)& CPlayerInfo__FindObjectToSteal);
+
+//                Retexture
+//	SetUpHook(g_libGTASA + 0x00391E20, (uintptr_t)CObject__Render_hook, (uintptr_t*)& CObject__Render);
 
 	InstallSAMPHooks();
 	HookCPad();

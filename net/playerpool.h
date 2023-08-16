@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #pragma once
 
 #define NO_TEAM 255

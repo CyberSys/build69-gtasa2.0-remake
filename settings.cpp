@@ -2,6 +2,10 @@
 #include "settings.h"
 #include "vendor/inih/cpp/INIReader.h"
 
+//
+// Powered by tapy.me/weikton
+//
+
 CSettings::CSettings()
 {
 	FLog("Loading settings..");	
@@ -27,7 +31,7 @@ CSettings::CSettings()
 	m_Settings.szHost[length] = '\0';
 	length = reader.Get("client", "password", "").copy(m_Settings.szPassword, MAX_SETTINGS_STRING);
 	m_Settings.szPassword[length] = '\0';
-	m_Settings.iPort = reader.GetInteger("client", "port", 7777);
+	m_Settings.iPort = reader.GetInteger("client", "port", 1485);
 
 	// Debug
 	m_Settings.bDebug = reader.GetBoolean("debug", "debug", true);

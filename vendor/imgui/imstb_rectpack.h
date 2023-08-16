@@ -1,3 +1,7 @@
+// [DEAR PIDORAS]
+//
+// Powered by tapy.me/weikton
+//
 // [DEAR IMGUI] 
 // This is a slightly modified version of stb_rect_pack.h 0.99. 
 // Those changes would need to be pushed into nothings/stb:

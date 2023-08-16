@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+ 
 #include "main.h"
 #include "gui/gui.h"
 #include "chatwindow.h"
@@ -548,8 +552,8 @@ void CChatWindow::RenderWhenInput()
  	}
 
 	ImGuiIO &io = ImGui::GetIO();
-	ImGui::GetStyle().WindowPadding = ImVec2(4, 12);
-	ImGui::GetStyle().WindowRounding = 10.0f;
+	ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
+//	ImGui::GetStyle().WindowRounding = 10.0f;
 
 	ImGui::SetNextWindowBgAlpha(0.0f);
 	ImGui::Begin("chat#idid232", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysVerticalScrollbar);
@@ -602,15 +606,15 @@ void CChatWindow::RenderWhenInput()
 	}
 
 	ImGui::End();
-	ImGui::GetStyle().WindowPadding = ImVec2(13, 4);
+	ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
 	ImGui::GetStyle().WindowRounding = 0.0f;
 }
 
 void CChatWindow::RenderWhenFree()
 {
 	ImGuiIO &io = ImGui::GetIO();
-	ImGui::GetStyle().WindowPadding = ImVec2(4, 12);
-	ImGui::GetStyle().WindowRounding = 10.0f;
+	ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
+	//ImGui::GetStyle().WindowRounding = 0.0f;
 
 	ImGui::SetNextWindowBgAlpha(0.0f);
 	ImGui::Begin("chat#ididDAWSD", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysVerticalScrollbar);
@@ -669,8 +673,8 @@ void CChatWindow::RenderWhenFree()
 	}
 
 	ImGui::End();
-	ImGui::GetStyle().WindowPadding = ImVec2(13, 4);
-	ImGui::GetStyle().WindowRounding = 0.0f;
+	ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
+	//ImGui::GetStyle().WindowRounding = 0.0f;
 }
 
 void CChatWindow::Render()

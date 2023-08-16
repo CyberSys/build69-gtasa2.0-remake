@@ -1,3 +1,8 @@
+//
+// Powered by tapy.me/weikton
+//
+ 
+
 #include "main.h"
 
 #include "gui/gui.h"
@@ -91,7 +96,7 @@ void CKeyBoard::Render()
 	// dividing line
 	ImGui::GetOverlayDrawList()->AddLine(
 		ImVec2(m_Pos.x, m_Pos.y + m_fKeySizeY), 
-		ImVec2(m_Size.x, m_Pos.y + m_fKeySizeY), 0xFF3291F5);
+		ImVec2(m_Size.x, m_Pos.y + m_fKeySizeY), 0xFFFFFFFF);
 
 	float fKeySizeY = m_fKeySizeY; // Неадекватный баг, лол
 

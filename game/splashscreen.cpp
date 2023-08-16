@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #include "../main.h"
 #include "RW/RenderWare.h"
 #include "game.h"
@@ -19,7 +23,7 @@ unsigned int color_scheme = 0;
 void LoadSplashTexture()
 {
 	FLog("Loading splash texture..");
-	splashTexture = (RwTexture*)LoadTextureFromDB("samp", "mylogo");
+	splashTexture = (RwTexture*)LoadTextureFromDB("txd", "radardisc");
 
 	color_scheme = 1;//rand() % MAX_SCHEMAS;
 }
@@ -84,13 +88,7 @@ void RenderSplashScreen()
 
 	ImGui_ImplRenderWare_NewFrame();
 	ImGui::NewFrame();
-
-	ImGui::GetOverlayDrawList()->AddText(ImVec2(0, 0), colors[color_scheme][1], 
-		"\n\t"
-		u8"cds4r@smmandroid.ru\n\t"
-		u8"vk.com/mobile.samp\n\t"
-		u8"donationalerts.ru/r/cds4r");
-
+	//ImGui::GetBackgroundDrawList()->AddText(ImVec2(pGUI->ScaleX(15.0f), pGUI->ScaleY(15.0f)), COLOR_WHITE, "\tVersion: 1.03\n\tDeveloper: tapy.me/weikton");
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplRenderWare_RenderDrawData(ImGui::GetDrawData());

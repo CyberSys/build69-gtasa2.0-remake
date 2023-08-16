@@ -1,4 +1,8 @@
 #pragma once
+//
+// Powered by tapy.me/weikton
+//
+
 
 #define MAX_SETTINGS_STRING	0x7F
 

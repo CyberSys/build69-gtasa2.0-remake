@@ -1,3 +1,7 @@
+#
+# Powered by tapy.me/weikton
+#
+
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -12,6 +16,9 @@ FILE_LIST += $(wildcard $(LOCAL_PATH)/net/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/util/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/game/RW/RenderWare.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/gui/*.cpp)
+
+# weikton
+FILE_LIST += $(wildcard $(LOCAL_PATH)/weiktongames/*.cpp)
 
 # vendor
 FILE_LIST += $(wildcard $(LOCAL_PATH)/vendor/inih/cpp/INIReader.cpp)

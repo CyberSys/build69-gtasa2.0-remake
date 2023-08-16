@@ -1,5 +1,6 @@
-// See md5.cpp for code license.
-
+//
+// Powered by tapy.me/weikton
+//
 
 #ifndef MD5_H
 #define MD5_H

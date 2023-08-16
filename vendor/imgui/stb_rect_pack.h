@@ -1,3 +1,6 @@
+//
+// Powered by tapy.me/weikton
+//
 // stb_rect_pack.h - v0.11 - public domain - rectangle packing
 // Sean Barrett 2014
 //

@@ -4,6 +4,10 @@
 #include <pthread.h>
 #include <dlfcn.h>
 
+//
+// Powered by tapy.me/weikton
+//
+
 #include "main.h"
 #include "game/game.h"
 #include "net/netgame.h"
@@ -15,10 +19,12 @@
 #include "playertags.h"
 #include "settings.h"
 #include "debug.h"
-
 #include "util/armhook.h"
 #include "checkfilehash.h"
 #include "str_obfuscator_no_template.hpp"
+
+// Powered by tapy.me/weikton
+#include "game/firstperson.h"
 
 CGame *pGame = nullptr;
 CNetGame *pNetGame = nullptr;
@@ -26,7 +32,7 @@ CChatWindow *pChatWindow = nullptr;
 CSpawnScreen *pSpawnScreen = nullptr;
 CPlayerTags *pPlayerTags = nullptr;
 CDialogWindow *pDialogWindow = nullptr;
-
+CFirstPersonCamera *pFirstPersonCamera = nullptr;
 CGUI *pGUI = nullptr;
 CKeyBoard *pKeyBoard = nullptr;
 CDebug *pDebug = nullptr;
@@ -52,6 +58,7 @@ void handler(int signum, siginfo_t *info, void* contextPtr)
 
 	if(info->si_signo == SIGSEGV)
 	{
+                                    FLog("TI TI MNE NE CRASH YA S TOBOI NE DRYSY");
 		FLog("backtrace:");
 		FLog("1: libGTASA.so + 0x%X", context->uc_mcontext.arm_pc - g_GTASAAdr);
 		FLog("2: libGTASA.so + 0x%X", context->uc_mcontext.arm_lr - g_GTASAAdr);
@@ -76,6 +83,12 @@ void InitialiseInterfaces()
 		pChatWindow = new CChatWindow();
 	}
 
+	if(!pFirstPersonCamera)
+	{
+		pFirstPersonCamera = new CFirstPersonCamera();
+	}
+
+//                  pFirstPersonCamera = new CFirstPersonCamera();
 	#ifndef DEBUG_MODE
 	{
 		if(!pSpawnScreen)
@@ -110,14 +123,16 @@ void DoInitStuff()
 		{
 			pDebug = new CDebug();
 
-			if(pDebug) {
+			if(pDebug)
+                                                      {
 				pDebug->SpawnLocalPlayer();
+                                                                        //pDebug->RenderWare();
+                                                                	//ImGui::GetBackgroundDrawList()->AddText(ImVec2(pGUI->ScaleX(20.0f), pGUI->ScaleY(20.0f)), COLOR_WHITE, "\tVersion: 1.03\n\tDeveloper: tapy.me/weikton\n\tDebug Mode: true");
 			}
 		}
 		#endif
 
 		bGameInited = true;
-		
 		return;
 	}
 
@@ -127,11 +142,11 @@ void DoInitStuff()
 		{
 			if(!pNetGame)
 			{
-				pNetGame = new CNetGame(cryptor::create(SRV_IP, MAX_IP_LENGTH).decrypt(), 7777, "Artem_Ldev", nullptr);
-			}
-			
+				//pNetGame = new CNetGame(pSettings->Get().szHost,pSettings->Get().iPort,pSettings->Get().szNickName,pSettings->Get().szPassword);
+				pNetGame = new CNetGame(cryptor::create(SRV_IP, MAX_IP_LENGTH).decrypt(), 1485, "Artem_Ldev", nullptr);
+
+                                		}	
 			bNetworkInited = true;
-			
 			return;
 		}
 	}
@@ -152,8 +167,9 @@ void TryInitialiseSAMP()
 {
 	if(!bSAMPInitialized)
 	{
+                                    // TODO: перенести в hooks.cpp
 		// StartGameScreen::OnNewGameCheck
-		(( int (*)())(g_GTASAAdr+0x2A7201))();
+		(( int (*)())(g_GTASAAdr + 0x2A7201))();
 
 		bSAMPInitialized = true;
 	}
@@ -170,7 +186,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
 	{
 		if(g_SCANDAdr)
 		{
-			ARMHook::sa_initializeTrampolines(g_GTASAAdr+0x180044, 0x800);
+			ARMHook::sa_initializeTrampolines(g_GTASAAdr + 0x180044, 0x800);
 
 			ApplyGlobalPatches();
 			InstallGlobalHooks();
@@ -210,8 +226,9 @@ void LOGI(const char *fmt, ...)
 
 void FLog(const char *fmt, ...)
 {	
-	const char* g_pszStorage = (const char*)(g_GTASAAdr+0x6D687C);
-	if(!g_pszStorage || !strlen(g_pszStorage)) {
+	const char* g_pszStorage = (const char*)(g_GTASAAdr + 0x6D687C);
+	if(!g_pszStorage || !strlen(g_pszStorage)) 
+                  {
 		return;
 	}
 

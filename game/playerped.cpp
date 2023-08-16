@@ -810,7 +810,18 @@ void CPlayerPed::ProcessAttachedObjects()
 					pObject->SetCollisionChecking(false);
 				}
 
+		                                   // uintptr_t m_pRwObject = m_pPed->entity.m_pRwObject;
+
+                                                                        // GetAnimHierarchyFromSkinClump(RpClump *)
+//				uintptr_t pAnimHierarchy = (( uintptr_t (*)(uintptr_t))(g_GTASAAdr + 0x5D1020 + 1))(m_pRwObject);
+//
+  //                                                                      // RpHAnimIDGetIndex(RpHAnimHierarchy *,int)
+//				int iAnimIndex = (( uintptr_t (*)(uintptr_t, uintptr_t))(g_GTASAAdr + 0x1C2C90 + 1))(pAnimHierarchy, 4) << 6;
+//				MATRIX4X4 *mat = (MATRIX4X4*)(iAnimIndex + *(uintptr_t*)(pAnimHierarchy+8));
+//				memcpy(&m_HeadBoneMatrix, mat, sizeof(MATRIX4X4));
+           
 				// TODO: will be make it
+                                                                        // in procces bro hahaha
 			}
 			else
 			{
@@ -819,6 +830,19 @@ void CPlayerPed::ProcessAttachedObjects()
 		}
 	}
 }
+
+//MATRIX4X4* RwMatrixMultiplyByVector(VECTOR* out, MATRIX4X4* a2, VECTOR* in)
+//{
+//	MATRIX4X4* result;
+//	VECTOR* v4;
+
+//	result = a2;
+//	v4 = in;
+//	out->X = a2->at.X * in->Z + a2->up.X * in->Y + a2->right.X * in->X + a2->pos.X;
+//	out->Y = result->at.Y * v4->Z + result->up.Y * v4->Y + result->right.Y * v4->X + result->pos.Y;
+//	out->Z = result->at.Z * v4->Z + result->up.Z * v4->Y + a2->right.Z * in->X + result->pos.Z;
+//	return result;
+//}
 
 uint16_t CPlayerPed::GetKeys(uint16_t *lrAnalog, uint16_t *udAnalog)
 {

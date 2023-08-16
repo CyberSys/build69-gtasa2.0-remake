@@ -1,3 +1,7 @@
+//
+// Powered by tapy.me/weikton
+//
+
 #pragma once
 
 // spectate
@@ -172,7 +176,7 @@ public:
 	void SendInCarFullSyncData();
 	void SendPassengerFullSyncData();
 	void SendAimSyncData();
-
+	
 public:
 	bool				m_bWaitingForSpawnRequestReply;
 

@@ -1,3 +1,6 @@
+//
+// Powered by tapy.me/weikton
+//
 #include "../main.h"
 
 void cp1251_to_utf8(char *out, const char *in, unsigned int len)

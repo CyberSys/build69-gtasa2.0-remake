@@ -1,8 +1,8 @@
 #pragma once
 
-/*
-	Будем ебашить виртуальную клавиатуру
-*/
+//
+// Powered by tapy.me/weikton
+// 
 
 #define LAYOUT_ENG			0
 #define LAYOUT_RUS			1	

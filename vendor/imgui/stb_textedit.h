@@ -1,3 +1,6 @@
+//
+// Powered by tapy.me/weikton
+//
 // [ImGui] this is a slightly modified version of stb_textedit.h 1.12. Those changes would need to be pushed into nothings/stb
 // [ImGui] - 2018-06: fixed undo/redo after pasting large amount of text (over 32 kb). Redo will still fail when undo buffers are exhausted, but text won't be corrupted (see nothings/stb issue #620)
 // [ImGui] - 2018-06: fix in stb_textedit_discard_redo (see https://github.com/nothings/stb/issues/321)
