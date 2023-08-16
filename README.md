@@ -51,7 +51,7 @@ SA-MP ANDROID build 69 to GTASA 2.0 with AML
 - ник в main.cpp
 - change IP in main.h file
 - change your nickname in main.cpp
-
+#
 - **StartUp / Запуск**
 - Перенести все файлы с названием  (они где то в дата)"tracks" в SAMP/
 - Добавляем шрифт arial_bold.ttf в папку SAMP/fonts
