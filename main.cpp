@@ -4,9 +4,7 @@
 #include <pthread.h>
 #include <dlfcn.h>
 
-//
-// Powered by tapy.me/weikton
-//
+// JNI_VERSION_1_4
 
 #include "main.h"
 #include "game/game.h"
@@ -23,7 +21,6 @@
 #include "checkfilehash.h"
 #include "str_obfuscator_no_template.hpp"
 
-// Powered by tapy.me/weikton
 #include "game/firstperson.h"
 
 CGame *pGame = nullptr;
@@ -52,6 +49,15 @@ void InstallGlobalHooks();
 void ApplyGlobalPatches();
 void ApplySCAndPatches();
 
+void InitSAMP(JNIEnv* pEnv, jobject thiz);
+extern "C"
+{
+	JNIEXPORT void JNICALL Java_com_nvidia_devtech_NvEventQueueActivity_initSAMP(JNIEnv* pEnv, jobject thiz)
+	{
+		InitSAMP(pEnv, thiz);
+	}
+}
+
 void handler(int signum, siginfo_t *info, void* contextPtr)
 {
 	ucontext* context = (ucontext_t*)contextPtr;
@@ -71,6 +77,19 @@ void handler(int signum, siginfo_t *info, void* contextPtr)
 	return;
 }
 
+#include "java/CJava.h"
+void InitSAMP(JNIEnv* pEnv, jobject thiz)
+{
+	FLog("Initializing SAMP..");
+//                  WLoader("SAMP Initializing, with directory: %s", g_pszStorage);
+
+//                  LoadBassLibrary();
+//                  WLoader("Loading libbass.so");
+
+	pJava = new CJava(pEnv, thiz);
+//	pJava->SetUseFullScreen(pSettings->GetReadOnly().iCutout);
+}
+
 void InitialiseInterfaces()
 {
 	if(!pKeyBoard)
@@ -88,7 +107,6 @@ void InitialiseInterfaces()
 		pFirstPersonCamera = new CFirstPersonCamera();
 	}
 
-//                  pFirstPersonCamera = new CFirstPersonCamera();
 	#ifndef DEBUG_MODE
 	{
 		if(!pSpawnScreen)
@@ -122,12 +140,9 @@ void DoInitStuff()
 		#ifdef DEBUG_MODE
 		{
 			pDebug = new CDebug();
-
 			if(pDebug)
                                                       {
 				pDebug->SpawnLocalPlayer();
-                                                                        //pDebug->RenderWare();
-                                                                	//ImGui::GetBackgroundDrawList()->AddText(ImVec2(pGUI->ScaleX(20.0f), pGUI->ScaleY(20.0f)), COLOR_WHITE, "\tVersion: 1.03\n\tDeveloper: tapy.me/weikton\n\tDebug Mode: true");
 			}
 		}
 		#endif
@@ -142,9 +157,7 @@ void DoInitStuff()
 		{
 			if(!pNetGame)
 			{
-				//pNetGame = new CNetGame(pSettings->Get().szHost,pSettings->Get().iPort,pSettings->Get().szNickName,pSettings->Get().szPassword);
-				pNetGame = new CNetGame(cryptor::create(SRV_IP, MAX_IP_LENGTH).decrypt(), 1485, "Artem_Ldev", nullptr);
-
+				pNetGame = new CNetGame(cryptor::create(SRV_IP, MAX_IP_LENGTH).decrypt(), 1485, "Dev_Weikton", nullptr);
                                 		}	
 			bNetworkInited = true;
 			return;
@@ -175,37 +188,43 @@ void TryInitialiseSAMP()
 	}
 }
 
+extern "C"
+{
+	JavaVM* javaVM = NULL;
+	JavaVM* alcGetJavaVM(void) 
+                  {
+		return javaVM;
+	}
+}
+
 jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
 	__android_log_write(ANDROID_LOG_INFO, "AXL", "SA-MP Library loaded! Build time: " __DATE__ " " __TIME__);
 
+	javaVM = vm;
+	__android_log_write(ANDROID_LOG_INFO, "AXL", "CJava Init.");
+
 	g_GTASAAdr = ARMHook::getLibraryAddress("libGTASA.so");
 	g_SCANDAdr = ARMHook::getLibraryAddress("libSCAnd.so");
 
-	if(g_GTASAAdr)
-	{
-		if(g_SCANDAdr)
-		{
-			ARMHook::sa_initializeTrampolines(g_GTASAAdr + 0x180044, 0x800);
+	if(!g_GTASAAdr) std::terminate();
 
-			ApplyGlobalPatches();
-			InstallGlobalHooks();
-			InitRenderWareFunctions();
-			ApplySCAndPatches();
+	ARMHook::sa_initializeTrampolines(g_GTASAAdr + 0x180044, 0x800);
+
+	ApplyGlobalPatches();
+	InstallGlobalHooks();
+	InitRenderWareFunctions();
+	ApplySCAndPatches();
 			
-			pGame = new CGame();
+	pGame = new CGame();
 
-			struct sigaction act;
-			act.sa_sigaction = handler;
-			sigemptyset(&act.sa_mask);
-			act.sa_flags = SA_SIGINFO;
-			sigaction(SIGSEGV, &act, 0);
+	struct sigaction act;
+	act.sa_sigaction = handler;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGSEGV, &act, 0);
 
-			return JNI_VERSION_1_4;
-		}
-	}	
-
-	return 0;
+	return JNI_VERSION_1_4;	
 }
 
 void LOGI(const char *fmt, ...)
