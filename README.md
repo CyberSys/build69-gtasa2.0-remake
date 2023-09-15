@@ -5,7 +5,13 @@ SA-MP ANDROID build 69 to GTASA 2.0 with AML
 
 # ChangeLog
 
-**21.07.2023**
+# 15.09.2023
+**SUPPORT JAVA (60% work)**
+- Добавлена поддержка Java классов
+- InitSAMP (50%)
+- CJava* pJava class
+
+# 21.07.2023
 - Новый gui.cpp (Кнопки ALT и Render Version)
 - Новый текст при запуске в netgame.cpp
 
