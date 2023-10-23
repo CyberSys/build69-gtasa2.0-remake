@@ -253,34 +253,18 @@ void ApplyGlobalPatches()
 
     //ApplyTracksPatches();
     ApplyRadarPatches();
+    ApplySCPatches();
 }
 
-void ApplySCAndPatches()
+void ApplySCPatches()
 {
 	FLog("ApplySCAndPatches [0]");
 
-                  // --------------------------------------------------------------------------------------------------------------------------------------------
-                  // 2.0
-	// uintptr_t g_libSCAnd = ARMHook::getLibraryAddress("libSCAnd.so");
-                  // 0026F7D4 aComRockstargam_22 DCB "com/rockstargames/hal/andThread",0
-	// ARMHook::writeMemory(g_SCANDAdr + 0x26F7D4, (uintptr_t)"com/rockstargames/hal/andViewManager", 37);
-
-                  // 001ACF5C aRunonmainthrea DCB "runOnMainThread",0 ; DATA XREF: hal::Thread::runOnMainThread(hal::Thread::Runnable *,int)+74↑o
-	// ARMHook::writeMemory(g_SCANDAdr + 0x1ACF5C, (uintptr_t)"staticExitSocialClub", 21);
-
-                  // 001A63C0 aIiV            DCB "(II)V",0           ; DATA XREF: hal::ColourPicker::SetFittedItem(int,int)+12↑o
-	// ARMHook::writeMemory(g_SCANDAdr + 0x1A63C0, (uintptr_t)"()V", 4);
-                  // --------------------------------------------------------------------------------------------------------------------------------------------
-
-                  // ------------------------------------------------------------------------------------------------------
-                  // 1.08
-	//uintptr_t g_libSCAnd = FindLibrary("libSCAnd.so");
-	//CPatch::WriteMemory(g_libSCAnd + 0x1E16DC, cryptor::create("com/rockstargames/hal/andViewManager", 37).decrypt(), 37);
-	//CPatch::WriteMemory(g_libSCAnd + 0x1E1738, cryptor::create("staticExitSocialClub", 21).decrypt(), 21);
-	//CPatch::WriteMemory(g_libSCAnd + 0x1E080C, cryptor::create("()V", 4).decrypt(), 4);
-                  // -------------------------------------------------------------------------------------------------------
-
-                  FLog("ApplySCAndPatches [libSCAnd.so wasted]");
+	uintptr_t g_libSCAnd = ARMHook::getLibraryAddress("libSCAnd.so");
+        ARMHook::unprotect(g_libSCAnd + 0x31C149, 1);
+        *(bool*)(g_libSCAnd + 0x31C149) = true;
+	
+        FLog("ApplySCAndPatches [libSCAnd.so wasted]");
 }
 
 void ApplySAMPPatchesInGame()
